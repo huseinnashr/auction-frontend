@@ -1,0 +1,18 @@
+import { Button, Stack, TextField, Typography } from '@mui/material';
+import React from 'react';
+import Navbar from '../components/Navbar';
+
+function Deposit() {
+  return <Stack width="100%">
+    <Navbar />
+    <Stack padding={8} spacing={2} >
+      <Typography variant='h4' gutterBottom={true}>Deposit</Typography>
+      <TextField id="outlined-basic" label="Amount ($)" variant="outlined" />
+      <Stack direction="row" justifyContent="end">
+        <Button variant="outlined">Deposit</Button>
+      </Stack>
+    </Stack>
+  </Stack>
+}
+
+export default Deposit
