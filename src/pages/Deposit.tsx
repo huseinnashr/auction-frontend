@@ -3,8 +3,7 @@ import React from 'react';
 import Navbar from '../components/Navbar';
 
 function Deposit() {
-  return <Stack width="100%">
-    <Navbar />
+  return (
     <Stack padding={8} spacing={2} >
       <Typography variant='h4' gutterBottom={true}>Deposit</Typography>
       <TextField id="outlined-basic" label="Amount ($)" variant="outlined" />
@@ -12,7 +11,7 @@ function Deposit() {
         <Button variant="outlined">Deposit</Button>
       </Stack>
     </Stack>
-  </Stack>
+  )
 }
 
 export default Deposit

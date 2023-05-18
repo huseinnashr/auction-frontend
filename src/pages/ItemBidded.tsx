@@ -1,21 +1,18 @@
-import { Box, Chip, CircularProgress, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, Typography } from '@mui/material';
+import { Chip, CircularProgress, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import Navbar from '../components/Navbar';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { BidEntity } from '../entity/bid.entity';
 import EmojiEvents from '@mui/icons-material/EmojiEvents';
-import { AppError } from '../pkg/apperror/apperror.pkg';
 
 function ItemBidded() {
-  return <Stack width="100%">
-    <Navbar />
+  return (
     <Stack padding={8}>
       <Typography variant='h4' gutterBottom={true}>Bidded Item List</Typography>
       <Bid />
     </Stack>
-  </Stack>
+  )
 }
 
 export default ItemBidded

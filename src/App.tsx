@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import NotFound from './pages/NotFound';
 import Login from './pages/Login';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Register from './pages/Register';
 import ItemCreated from './pages/ItemCreated';
@@ -11,6 +11,8 @@ import Deposit from './pages/Deposit';
 import Resend from './pages/Resend';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Context } from './context/index.context';
+import { Stack, Typography } from '@mui/material';
+import { NavbarView } from './components/NavbarView';
 
 export const App = () => {
   const { auth } = useContext(Context)
@@ -24,11 +26,13 @@ export const App = () => {
           <Route path="/register" Component={Register} />
         </Route>
         <Route element={<ProtectedRoute accessible={auth.data != null} redirect='/login' />} >
-          <Route path="/" Component={Home} />
-          <Route path="/item/created" Component={ItemCreated} />
-          <Route path="/item/bidded" Component={ItemBidded} />
-          <Route path="/item/create" Component={ItemCreate} />
-          <Route path="/deposit" Component={Deposit} />
+          <Route Component={NavbarView}>
+            <Route path="/" Component={Home} />
+            <Route path="/item/created" Component={ItemCreated} />
+            <Route path="/item/bidded" Component={ItemBidded} />
+            <Route path="/item/create" Component={ItemCreate} />
+            <Route path="/deposit" Component={Deposit} />
+          </Route>
         </Route>
         <Route path="*" Component={NotFound} />
       </Routes>

@@ -28,11 +28,14 @@ function Navbar() {
   return (
     <AppBar position='sticky'>
       <Toolbar disableGutters >
-        <Typography variant="h6" noWrap component="a" href="/" mx={2} display='block' sx={{
-          fontFamily: 'monospace', fontWeight: 700,
-          letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none',
-        }}> JITERA
-        </Typography>
+        <Button color='inherit' onClick={() => navigate('/')}>
+          <Typography variant="h6" noWrap component="a" mx={2} display='block' sx={{
+            fontFamily: 'monospace', fontWeight: 700,
+            letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none',
+          }}> JITERA
+          </Typography>
+        </Button>
+
         <Box sx={{ flexGrow: 1, display: 'flex' }}>
           <Button key="created" color="inherit" onClick={() => navigate('/item/created')}>Created</Button>
           <Button key="bidded" color="inherit" onClick={() => navigate('/item/bidded')}>Bidded</Button>
