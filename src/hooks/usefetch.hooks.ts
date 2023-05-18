@@ -1,21 +1,31 @@
 import { useState } from "react"
-import { HOST } from "../config"
+import { HOST, logger } from "../config"
 import { AppError } from "../pkg/apperror/apperror.pkg"
 import { safeCatchPromise } from "../pkg/safecatch/safecatch.pkg"
 import { UnexpectedError } from "../entity/errors.entity"
-import { MessageError } from "../entity/errors.entity"
-import { FieldError } from "../entity/errors.entity"
+import { ViewMessageError } from "../entity/errors.entity"
+import { ViewFieldError } from "../entity/errors.entity"
 import { ClassConstructor, JSONType, unmarshall } from "../pkg/jsonutil/jsonutil.pkg"
 import { Nullable } from "../pkg/safecatch/safecatch.type"
+import { Map } from "immutable"
 
-type UseFetchResponse<T> = T | UnexpectedError | MessageError | FieldError | null
 type HTTPMethod = "GET" | "POST"
+export type FieldError = Map<string, string>
+interface UseFetchReturn<T> {
+  loading: boolean,
+  data: Nullable<T>
+  error: Nullable<ViewMessageError>
+  fieldError: FieldError
+  fetch: (req: Nullable<JSONType>) => Promise<void>
+}
 
-export const useFetch = <T>(method: HTTPMethod, endpoint: string, cls: ClassConstructor<T>): [boolean, UseFetchResponse<T>, (req: Nullable<JSONType>) => Promise<void>] => {
-  const [response, setResponse] = useState<UseFetchResponse<T>>(null)
-  const [isLoading, setIsLoading] = useState(false)
+export const useFetch = <T>(method: HTTPMethod, endpoint: string, cls: ClassConstructor<T>): UseFetchReturn<T> => {
+  const [data, setData] = useState<Nullable<T>>(null)
+  const [error, setError] = useState<Nullable<ViewMessageError>>(null)
+  const [fieldError, setFieldError] = useState<Map<string, string>>(Map())
+  const [loading, setLoading] = useState(false)
 
-  const _fetchData = async (req: Nullable<JSONType>) => {
+  const _fetchData = async (req: Nullable<Object>) => {
     let reqBody: Nullable<string> = null
     if (req != null) {
       const rawReq = await safeCatchPromise(async () => JSON.stringify(req))
@@ -36,7 +46,7 @@ export const useFetch = <T>(method: HTTPMethod, endpoint: string, cls: ClassCons
     }
 
     if (resBody.error != null) {
-      const messageErr = unmarshall(resBody.error, MessageError)
+      const messageErr = unmarshall(resBody.error, ViewMessageError)
       if (messageErr instanceof AppError) {
         return new UnexpectedError(`failed to unmarshall body.error`, messageErr)
       }
@@ -45,13 +55,14 @@ export const useFetch = <T>(method: HTTPMethod, endpoint: string, cls: ClassCons
     }
 
     if (resBody.fieldErrors != null) {
-      const fieldErr = unmarshall(resBody.fieldErrors, FieldError)
+      const fieldErr = unmarshall(resBody, ViewFieldError)
       if (fieldErr instanceof AppError) {
         return new UnexpectedError(`failed to unmarshall res body.fieldErrors`, fieldErr)
       }
 
       return fieldErr
     }
+
 
     const bodyObj = unmarshall(resBody, cls)
     if (bodyObj instanceof AppError) {
@@ -62,10 +73,28 @@ export const useFetch = <T>(method: HTTPMethod, endpoint: string, cls: ClassCons
   }
 
   const fetchData = async (req: Nullable<JSONType>) => {
-    setIsLoading(true)
-    setResponse(await _fetchData(req))
-    setIsLoading(false)
+    setLoading(true)
+    setError(null)
+    setFieldError(Map())
+
+    const res = await _fetchData(req)
+    setLoading(false)
+
+    if (res instanceof UnexpectedError) {
+      logger.logError("failed when fetching data", res)
+      return setError(res.toMessageError())
+    }
+
+    if (res instanceof ViewMessageError) {
+      return setError(res)
+    }
+
+    if (res instanceof ViewFieldError) {
+      return setFieldError(Map(res.fieldErrors))
+    }
+
+    return setData(res)
   }
 
-  return [isLoading, response, fetchData]
+  return { loading, data, error, fieldError, fetch: fetchData }
 }

@@ -1,4 +1,6 @@
+import { Expose } from "class-transformer"
 import { AppError, TracableError } from "../pkg/apperror/apperror.pkg"
+import { Nullable } from "../pkg/safecatch/safecatch.type"
 
 export class UnexpectedError extends TracableError {
   constructor(parentMessage: string, parentCause: TracableError) {
@@ -9,12 +11,25 @@ export class UnexpectedError extends TracableError {
 
     super(message, parent)
   }
+
+  toMessageError(): ViewMessageError {
+    const messageErr = new ViewMessageError()
+    messageErr.message = this.message
+
+    return messageErr
+  }
 }
 
-export class MessageError {
+export class ViewMessageError {
+  @Expose()
   message: string = ""
 }
 
-export class FieldError {
-  message: string = ""
+export class ViewFieldError {
+  @Expose()
+  fieldErrors: { [key: string]: string } = {}
+}
+
+export class ViewUnauthorized {
+  constructor(public message: string) { }
 }

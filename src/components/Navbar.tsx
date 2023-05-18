@@ -9,10 +9,13 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
+import { Context } from '../context/index.context';
 
 function Navbar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+
+  const { auth } = React.useContext(Context)
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -31,8 +34,8 @@ function Navbar() {
         }}> JITERA
         </Typography>
         <Box sx={{ flexGrow: 1, display: 'flex' }}>
-          <Button key="created" color="inherit" href="/item/created">Created</Button>
-          <Button key="bidded" color="inherit" href="/item/bidded">Bidded</Button>
+          <Button key="created" color="inherit" onClick={() => navigate('/item/created')}>Created</Button>
+          <Button key="bidded" color="inherit" onClick={() => navigate('/item/bidded')}>Bidded</Button>
         </Box>
         <Box flexGrow={0} mx={2}>
           <Tooltip title="Open settings">
@@ -50,7 +53,7 @@ function Navbar() {
             <MenuItem onClick={() => navigate('/deposit')} >
               <Typography textAlign="center">Deposit</Typography>
             </MenuItem>
-            <MenuItem onClick={handleCloseUserMenu}>
+            <MenuItem onClick={() => auth.logout()}>
               <Typography textAlign="center">Logout</Typography>
             </MenuItem>
           </Menu>

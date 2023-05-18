@@ -1,4 +1,4 @@
-import { json } from "../pkg/jsonutil/jsonutil.pkg"
+import { Expose } from "class-transformer"
 
 export enum AccountStatus {
   NOT_FOUND = "not_found",
@@ -7,10 +7,22 @@ export enum AccountStatus {
 }
 
 export class StatusResponse {
-  @json({ name: 'status' })
+  @Expose()
   status: AccountStatus = AccountStatus.NOT_FOUND
 }
 
 export class LoginResponse {
+  @Expose()
   token: string = ""
+
+  @Expose()
+  user: LoginUser = new LoginUser()
+
+  @Expose()
+  expiredAt: Date = new Date(0)
+}
+
+class LoginUser {
+  @Expose()
+  username: string = ""
 }
