@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { HOST, logger } from "../config"
 import { AppError } from "../pkg/apperror/apperror.pkg"
 import { safeCatchPromise } from "../pkg/safecatch/safecatch.pkg"
@@ -8,6 +8,7 @@ import { ViewFieldError } from "../entity/errors.entity"
 import { ClassConstructor, JSONType, unmarshall } from "../pkg/jsonutil/jsonutil.pkg"
 import { Nullable } from "../pkg/safecatch/safecatch.type"
 import { Map } from "immutable"
+import { Context } from "../context/index.context"
 
 type HTTPMethod = "GET" | "POST"
 export type FieldError = Map<string, string>
@@ -18,12 +19,16 @@ interface UseFetchReturn<T> {
   fieldError: FieldError
   fetch: (req: Nullable<JSONType>) => Promise<void>
 }
+interface FetchOption {
+  useAuth?: boolean
+}
 
-export const useFetch = <T>(method: HTTPMethod, endpoint: string, cls: ClassConstructor<T>): UseFetchReturn<T> => {
+export const useFetch = <T>(method: HTTPMethod, endpoint: string, cls: ClassConstructor<T>, options?: FetchOption): UseFetchReturn<T> => {
   const [data, setData] = useState<Nullable<T>>(null)
   const [error, setError] = useState<Nullable<ViewMessageError>>(null)
   const [fieldError, setFieldError] = useState<Map<string, string>>(Map())
   const [loading, setLoading] = useState(false)
+  const { auth } = useContext(Context)
 
   const _fetchData = async (req: Nullable<Object>) => {
     let reqBody: Nullable<string> = null
@@ -35,7 +40,12 @@ export const useFetch = <T>(method: HTTPMethod, endpoint: string, cls: ClassCons
       reqBody = rawReq
     }
 
-    const res = await safeCatchPromise(() => fetch(HOST + endpoint, { method, body: reqBody, headers: { 'content-type': 'application/json' } }))
+    const headers: JSONType = { 'content-type': 'application/json' }
+    if (options?.useAuth) {
+      headers["token"] = auth.data?.token
+    }
+
+    const res = await safeCatchPromise(() => fetch(HOST + endpoint, { method, body: reqBody, headers }))
     if (res instanceof AppError) {
       return new UnexpectedError(`failed to fetch ${endpoint}`, res)
     }

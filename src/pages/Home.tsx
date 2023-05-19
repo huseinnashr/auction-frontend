@@ -24,7 +24,7 @@ function Home() {
           <Paper elevation={2}>
             <Stack margin={2} spacing={1}>
               <Typography variant="h4" gutterBottom={true}>Bid Item Name</Typography>
-              <TextField id="outlined-basic" label="Bid Price ($)" variant="outlined" type='number' />
+              <TextField label="Bid Price ($)" variant="outlined" type='number' />
               <Stack direction="row" justifyContent="end" spacing={1}>
                 <Button variant="outlined" onClick={() => setModalOpen(false)}>Cancel</Button>
                 <Button variant="outlined">Submit</Button>

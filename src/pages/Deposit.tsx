@@ -6,7 +6,7 @@ function Deposit() {
   return (
     <Stack padding={8} spacing={2} >
       <Typography variant='h4' gutterBottom={true}>Deposit</Typography>
-      <TextField id="outlined-basic" label="Amount ($)" variant="outlined" />
+      <TextField label="Amount ($)" variant="outlined" />
       <Stack direction="row" justifyContent="end">
         <Button variant="outlined">Deposit</Button>
       </Stack>
