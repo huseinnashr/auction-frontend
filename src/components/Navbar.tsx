@@ -17,14 +17,6 @@ function Navbar() {
 
   const { auth } = React.useContext(Context)
 
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
   return (
     <AppBar position='sticky'>
       <Toolbar disableGutters >
@@ -43,12 +35,12 @@ function Navbar() {
         <Box flexGrow={0} mx={2}>
           <Tooltip title="Open settings">
             <Button color="inherit" endIcon={<Avatar sx={{ width: 32, height: 32 }} alt="T" src="/static/images/avatar/2.jpg" />}
-              sx={{ textTransform: "lowercase" }} onClick={handleOpenUserMenu}>
+              sx={{ textTransform: "lowercase" }} onClick={(e) => setAnchorElUser(e.currentTarget)}>
               test.test@gmail.com
             </Button>
           </Tooltip>
           <Menu anchorEl={anchorElUser} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} keepMounted
-            sx={{ mt: 1 }} open={Boolean(anchorElUser)} onClose={handleCloseUserMenu}
+            sx={{ mt: 1 }} open={Boolean(anchorElUser)} onClose={() => setAnchorElUser(null)} onClick={() => setAnchorElUser(null)}
           >
             <MenuItem onClick={() => navigate('/item/create')}>
               <Typography textAlign="center">Create New Item</Typography>
@@ -62,7 +54,7 @@ function Navbar() {
           </Menu>
         </Box>
       </Toolbar>
-    </AppBar>
+    </AppBar >
   );
 }
 export default Navbar;

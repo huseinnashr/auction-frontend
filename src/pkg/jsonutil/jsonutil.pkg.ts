@@ -21,5 +21,5 @@ export function unmarshallStr<T>(src: string, targetCls: ClassConstructor<T>): S
     return new AppError("Failed to parse data to json")
   }
 
-  return safeCatch(() => plainToClass(targetCls, src))
+  return safeCatch(() => plainToClass(targetCls, srcJson))
 }

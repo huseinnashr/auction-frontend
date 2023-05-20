@@ -3,7 +3,7 @@ import { Nullable } from '../pkg/safecatch/safecatch.type';
 import { LoginResponse } from '../entity/auth.entity';
 import { AuthStorageKey, logger } from '../config';
 import { unmarshallStr } from '../pkg/jsonutil/jsonutil.pkg';
-import { UnexpectedError, ViewUnauthorized } from '../entity/errors.entity';
+import { UnexpectedError } from '../entity/errors.entity';
 import { AppError } from '../pkg/apperror/apperror.pkg';
 
 export interface IAuthContext {
@@ -31,7 +31,8 @@ export const AuthContext = (): IAuthContext => {
     if (!data) {
       return
     }
-    // setTimeout(() => setData(null), (new Date()).getMilliseconds() - data.expiredAt.getMilliseconds())
+
+    setTimeout(() => logout(), +data.expiredAt - +(new Date()))
   }, [data])
 
   const init = () => {
@@ -52,6 +53,7 @@ export const AuthContext = (): IAuthContext => {
 
     return auth
   }
+
   const login = (data: LoginResponse) => {
     localStorage.setItem(AuthStorageKey, JSON.stringify(data))
     setData(data)

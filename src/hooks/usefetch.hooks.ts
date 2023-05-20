@@ -2,7 +2,7 @@ import { useContext, useState } from "react"
 import { HOST, logger } from "../config"
 import { AppError } from "../pkg/apperror/apperror.pkg"
 import { safeCatchPromise } from "../pkg/safecatch/safecatch.pkg"
-import { UnexpectedError } from "../entity/errors.entity"
+import { FieldSource, HTTPErrorCode, UnexpectedError } from "../entity/errors.entity"
 import { ViewMessageError } from "../entity/errors.entity"
 import { ViewFieldError } from "../entity/errors.entity"
 import { ClassConstructor, JSONType, unmarshall } from "../pkg/jsonutil/jsonutil.pkg"
@@ -65,14 +65,13 @@ export const useFetch = <T>(method: HTTPMethod, endpoint: string, cls: ClassCons
     }
 
     if (resBody.fieldErrors != null) {
-      const fieldErr = unmarshall(resBody, ViewFieldError)
+      const fieldErr = unmarshall(resBody.fieldErrors, ViewFieldError)
       if (fieldErr instanceof AppError) {
         return new UnexpectedError(`failed to unmarshall res body.fieldErrors`, fieldErr)
       }
 
       return fieldErr
     }
-
 
     const bodyObj = unmarshall(resBody, cls)
     if (bodyObj instanceof AppError) {
@@ -84,6 +83,7 @@ export const useFetch = <T>(method: HTTPMethod, endpoint: string, cls: ClassCons
 
   const fetchData = async (req: Nullable<JSONType>) => {
     setLoading(true)
+    setData(null)
     setError(null)
     setFieldError(Map())
 
@@ -91,16 +91,26 @@ export const useFetch = <T>(method: HTTPMethod, endpoint: string, cls: ClassCons
     setLoading(false)
 
     if (res instanceof UnexpectedError) {
-      logger.logError("failed when fetching data", res)
+      logger.logError("fetch return unexpected error", res)
       return setError(res.toMessageError())
     }
 
     if (res instanceof ViewMessageError) {
+      if (res.code == HTTPErrorCode.UNAUTHENTICATED) {
+        auth.logout()
+      }
+
       return setError(res)
     }
 
     if (res instanceof ViewFieldError) {
-      return setFieldError(Map(res.fieldErrors))
+      if (res.source == FieldSource.HEADER) {
+        const err = res.toUnexpectedError()
+        logger.logError("fetch return header field error", err)
+        return setError(err.toMessageError())
+      }
+
+      return setFieldError(Map(res.data))
     }
 
     return setData(res)

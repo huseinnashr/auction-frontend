@@ -36,7 +36,7 @@ function ItemCreate() {
       </Stack>
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
         <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: '100%' }}>
-          This is a success message!
+          Item has been created
         </Alert>
       </Snackbar>
     </Stack >

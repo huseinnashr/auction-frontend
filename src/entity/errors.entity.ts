@@ -3,7 +3,7 @@ import { AppError, TracableError } from "../pkg/apperror/apperror.pkg"
 import { Nullable } from "../pkg/safecatch/safecatch.type"
 
 export class UnexpectedError extends TracableError {
-  constructor(parentMessage: string, parentCause: TracableError) {
+  constructor(parentMessage: string, parentCause: Nullable<TracableError>) {
     const parent = new AppError(parentMessage, parentCause)
 
     const id = Math.random().toString(36).slice(-5)
@@ -20,14 +20,34 @@ export class UnexpectedError extends TracableError {
   }
 }
 
+export enum HTTPErrorCode {
+  UNAUTHENTICATED = "unauthorized",
+  BAD_REQUEST = "bad_request",
+  SERVER_ERROR = "server_error"
+}
+
 export class ViewMessageError {
+  @Expose()
+  code: HTTPErrorCode = HTTPErrorCode.BAD_REQUEST
+
   @Expose()
   message: string = ""
 }
 
+export enum FieldSource {
+  HEADER = "header",
+  BODY = "body"
+}
 export class ViewFieldError {
   @Expose()
-  fieldErrors: { [key: string]: string } = {}
+  source: FieldSource = FieldSource.HEADER
+
+  @Expose()
+  data: { [key: string]: string } = {}
+
+  toUnexpectedError(): UnexpectedError {
+    return new UnexpectedError(JSON.stringify(this.data), null)
+  }
 }
 
 export class ViewUnauthorized {

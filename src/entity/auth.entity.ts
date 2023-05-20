@@ -1,4 +1,4 @@
-import { Expose } from "class-transformer"
+import { Expose, Type } from "class-transformer"
 
 export enum AccountStatus {
   NOT_FOUND = "not_found",
@@ -19,6 +19,7 @@ export class LoginResponse {
   user: LoginUser = new LoginUser()
 
   @Expose()
+  @Type(() => Date)
   expiredAt: Date = new Date(0)
 }
 
