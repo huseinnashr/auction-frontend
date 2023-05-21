@@ -64,6 +64,12 @@ export class GetAllItemResponse {
   pagination: PaginationResponse = new PaginationResponse()
 }
 
+export class GetItemResponse {
+  @Expose()
+  @Type(() => ItemEntity)
+  item: ItemEntity = new ItemEntity()
+}
+
 export class PublishItemResponse {
   @Expose()
   message: string = ""

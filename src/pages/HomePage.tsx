@@ -2,7 +2,7 @@ import { Button, Modal, Paper, Stack, TextField, Typography } from '@mui/materia
 import React, { useState } from 'react';
 import { ItemEntity } from '../entity/item.entity';
 import { Masonry } from '@mui/lab';
-import { Item, ItemSkeleton } from '../components/Item';
+import { Item } from '../components/Item';
 
 function HomePage() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -13,7 +13,6 @@ function HomePage() {
       {/* <Grid2 columnSpacing={2} container> */}
       <Masonry columns={3} spacing={2}>
         <Item data={new ItemEntity()} button={<Button onClick={() => setModalOpen(true)}>Bid</Button>} />
-        <ItemSkeleton />
         {/* <Item data={new ItemEntity()} button={<Button onClick={() => setModalOpen(true)}>Bid</Button>} /> */}
       </Masonry>
       {/* </Grid2> */}

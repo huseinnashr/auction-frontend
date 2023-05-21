@@ -21,6 +21,7 @@ interface UseFetchReturn<T> {
 }
 interface FetchOption {
   useAuth?: boolean
+  noUserField?: boolean
 }
 
 export const useFetch = <T>(method: HTTPMethod, endpoint: string, cls: ClassConstructor<T>, options?: FetchOption): UseFetchReturn<T> => {
@@ -107,6 +108,12 @@ export const useFetch = <T>(method: HTTPMethod, endpoint: string, cls: ClassCons
       if (res.source == FieldSource.HEADER) {
         const err = res.toUnexpectedError()
         logger.logError("fetch return header field error", err)
+        return setError(err.toMessageError())
+      }
+
+      if (options?.noUserField) {
+        const err = res.toUnexpectedError()
+        logger.logError("unexpected field error", err)
         return setError(err.toMessageError())
       }
 
