@@ -1,5 +1,6 @@
 import { Expose, Type } from "class-transformer";
 import type { Nullable } from "../pkg/safecatch/safecatch.type";
+import { PaginationResponse } from "./pagination.entity";
 
 export class CreateItemResponse {
   @Expose()
@@ -51,4 +52,19 @@ export class BidWinner {
 
   @Expose()
   amount: number = 0;
+}
+
+export class GetAllItemResponse {
+  @Expose()
+  @Type(() => ItemEntity)
+  items: ItemEntity[] = []
+
+  @Expose()
+  @Type(() => PaginationResponse)
+  pagination: PaginationResponse = new PaginationResponse()
+}
+
+export class PublishItemResponse {
+  @Expose()
+  message: string = ""
 }

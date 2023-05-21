@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import NotFound from './pages/NotFound';
 import Login from './pages/Login';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
@@ -11,11 +11,12 @@ import Deposit from './pages/Deposit';
 import Resend from './pages/Resend';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Context } from './context/index.context';
-import { Stack, Typography } from '@mui/material';
 import { NavbarView } from './components/NavbarView';
+import { supressMasonryErr } from './hooks/tempfix.hooks';
 
 export const App = () => {
   const { auth } = useContext(Context)
+  useEffect(() => supressMasonryErr(), [])
 
   return (
     <BrowserRouter>

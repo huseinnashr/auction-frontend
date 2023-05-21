@@ -1,8 +1,8 @@
 import { Button, Modal, Paper, Stack, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
-import Item from '../components/Item';
 import { ItemEntity } from '../entity/item.entity';
+import { Masonry } from '@mui/lab';
+import { Item, ItemSkeleton } from '../components/Item';
 
 function Home() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -10,11 +10,13 @@ function Home() {
   return (
     <Stack padding={8}>
       <Typography variant='h4' gutterBottom={true}>Home Page</Typography>
-      <Grid2 columnSpacing={2} container>
-        <Grid2 xs={4}><Item data={new ItemEntity()} button={<Button onClick={() => setModalOpen(true)}>Bid</Button>} /></Grid2>
-        <Grid2 xs={4}><Item data={new ItemEntity()} button={<Button onClick={() => setModalOpen(true)}>Bid</Button>} /></Grid2>
-        <Grid2 xs={4}><Item data={new ItemEntity()} button={<Button onClick={() => setModalOpen(true)}>Bid</Button>} /></Grid2>
-      </Grid2>
+      {/* <Grid2 columnSpacing={2} container> */}
+      <Masonry columns={3} spacing={2}>
+        <Item data={new ItemEntity()} button={<Button onClick={() => setModalOpen(true)}>Bid</Button>} />
+        <ItemSkeleton />
+        {/* <Item data={new ItemEntity()} button={<Button onClick={() => setModalOpen(true)}>Bid</Button>} /> */}
+      </Masonry>
+      {/* </Grid2> */}
       <Modal
         keepMounted
         open={modalOpen}
