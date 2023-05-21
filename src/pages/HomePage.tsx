@@ -4,7 +4,7 @@ import { ItemEntity } from '../entity/item.entity';
 import { Masonry } from '@mui/lab';
 import { Item, ItemSkeleton } from '../components/Item';
 
-function Home() {
+function HomePage() {
   const [modalOpen, setModalOpen] = useState(false)
 
   return (
@@ -39,4 +39,4 @@ function Home() {
   )
 }
 
-export default Home
+export default HomePage

@@ -8,7 +8,7 @@ import { ViewMessageError } from '../entity/errors.entity';
 import { Map } from 'immutable';
 import { Context } from '../context/index.context';
 
-function Login() {
+function LoginPage() {
   const status = useFetch("POST", "/auth/status", StatusResponse)
   const login = useFetch("POST", "/auth/login", LoginResponse)
 
@@ -59,4 +59,4 @@ function Login() {
   </Stack>
 }
 
-export default Login
+export default LoginPage

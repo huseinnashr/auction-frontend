@@ -4,7 +4,7 @@ import { useFetch } from '../hooks/usefetch.hooks';
 import { CreateItemResponse } from '../entity/item.entity';
 import { useNavigate } from 'react-router-dom';
 
-function ItemCreate() {
+function ItemCreatePage() {
   const create = useFetch("POST", "/item/create", CreateItemResponse, { useAuth: true })
   const [name, setName] = useState("")
   const [startPrice, setStartPrice] = useState(0)
@@ -43,4 +43,4 @@ function ItemCreate() {
   )
 }
 
-export default ItemCreate
+export default ItemCreatePage

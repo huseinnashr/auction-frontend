@@ -6,7 +6,7 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { BidEntity } from '../entity/bid.entity';
 import EmojiEvents from '@mui/icons-material/EmojiEvents';
 
-function ItemBidded() {
+function ItemBiddedPage() {
   return (
     <Stack padding={8}>
       <Typography variant='h4' gutterBottom={true}>Bidded Item List</Typography>
@@ -15,7 +15,7 @@ function ItemBidded() {
   )
 }
 
-export default ItemBidded
+export default ItemBiddedPage
 
 function Bid() {
   const [bids, setBids] = useState<BidEntity[]>([])

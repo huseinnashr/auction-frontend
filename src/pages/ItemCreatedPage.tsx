@@ -6,7 +6,7 @@ import { useFetch } from '../hooks/usefetch.hooks';
 import { LoadingButton, Masonry } from '@mui/lab';
 import { PaginationLimit } from '../config';
 
-function ItemCreated() {
+function ItemCreatedPage() {
   const getAll = useFetch("POST", "/user/item/all", GetAllItemResponse, { useAuth: true })
   const publish = useFetch("POST", "/item/publish", PublishItemResponse, { useAuth: true })
 
@@ -52,4 +52,4 @@ function ItemCreated() {
   )
 }
 
-export default ItemCreated
+export default ItemCreatedPage

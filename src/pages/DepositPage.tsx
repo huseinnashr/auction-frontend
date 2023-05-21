@@ -4,7 +4,7 @@ import { useFetch } from '../hooks/usefetch.hooks';
 import { DepositResponse, GetBalanceResponse } from '../entity/user.entity';
 import { LoadingButton } from '@mui/lab';
 
-function Deposit() {
+function DepositPage() {
   const balance = useFetch("GET", "/user/balance", GetBalanceResponse, { useAuth: true })
   const deposit = useFetch("POST", "/user/deposit", DepositResponse, { useAuth: true })
   const [amount, setAmount] = useState(0)
@@ -51,4 +51,4 @@ function Deposit() {
   )
 }
 
-export default Deposit
+export default DepositPage
