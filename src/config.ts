@@ -7,3 +7,5 @@ export const logger = new Logger()
 export const AuthStorageKey = "auth"
 
 export const PaginationLimit = 3
+
+export const TimerHTTPDelay = 2000

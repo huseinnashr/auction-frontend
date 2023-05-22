@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { GetAllItemResponse, GetItemResponse, ItemEntity, ItemStatus, PublishItemResponse } from '../entity/item.entity';
 import { useFetch } from '../hooks/usefetch.hooks';
 import { LoadingButton } from '@mui/lab';
-import { PaginationLimit } from '../config';
+import { PaginationLimit, TimerHTTPDelay as APIFetchTimerDelay } from '../config';
 import { ItemSkeleton } from '../components/ItemSkeleton';
 import PeopleIcon from '@mui/icons-material/People';
 import { ViewMessageError } from '../entity/errors.entity';
 import { Nullable } from '../pkg/safecatch/safecatch.type';
+import { ConvertSecondsLeftToString, useTimer } from '../hooks/usetimer.hooks';
 
 export const ItemCreatedPage = () => {
   const getAll = useFetch("POST", "/user/item/all", GetAllItemResponse, { useAuth: true, noUserField: true })
@@ -64,11 +65,20 @@ export const Item = (props: ItemProps) => {
   const publish = useFetch("POST", "/item/publish", PublishItemResponse, { useAuth: true, noUserField: true })
   const getOne = useFetch("POST", "/user/item/one", GetItemResponse, { useAuth: true, noUserField: true })
 
+  const expiryTimer = useTimer({
+    onExpire: () => { getOne.fetch({ itemId: props.data.id }) },
+    delay: APIFetchTimerDelay
+  })
+
+  useEffect(() => {
+    if (props.data.startedAt && props.data.status == ItemStatus.ONGOING) {
+      const endTime = new Date(props.data.startedAt.getTime() + props.data.timeWindow * 1000)
+      expiryTimer.start(endTime)
+    }
+  }, [props.data])
+
   useEffect(() => { if (publish.data) getOne.fetch({ itemId: props.data.id }) }, [publish.data])
   useEffect(() => { if (getOne.data) props.setData(getOne.data.item) }, [getOne.data])
-
-  const [loading, setLoading] = useState(false)
-  useEffect(() => publish.loading || getOne.loading ? setLoading(true) : setLoading(false), [publish.loading, getOne.loading])
 
   const [error, setError] = useState<Nullable<ViewMessageError>>(null)
   useEffect(() => { if (publish.error) setError(publish.error) }, [publish.error])
@@ -82,9 +92,11 @@ export const Item = (props: ItemProps) => {
       <Stack direction="column" flexGrow={1} sx={{ padding: "8px" }}>
         <Typography>{props.data.name}</Typography>
         <Stack direction="row" >
-          <Stack direction="row" flexGrow={1} >
-            <Typography variant='caption'>By: {props.data.createdBy}</Typography>
-            <Typography variant='caption'>1 minute left</Typography>
+          <Stack direction="row" flexGrow={1} spacing={1}>
+            <Typography variant='caption'>By: {props.data.creator.username}</Typography>
+            {props.data.status == ItemStatus.ONGOING ?
+              <Typography variant='caption'>{ConvertSecondsLeftToString(expiryTimer.seconds)}</Typography> : null
+            }
           </Stack>
           <Stack direction="row">
             <Typography variant='caption' marginRight={1} >${props.data.bidAmount}</Typography>
@@ -94,8 +106,8 @@ export const Item = (props: ItemProps) => {
       </Stack>
       <Stack justifyContent="center" width="100px" padding={1}>
         {props.data.status == ItemStatus.DRAFT ?
-          <LoadingButton variant="outlined" loading={loading} onClick={() => publish.fetch({ itemId: props.data.id })} sx={{ height: "100%" }}>Publish</LoadingButton>
-          : <Button variant="outlined" sx={{ height: "100%" }} disabled>Published</Button>}
+          <LoadingButton variant="outlined" loading={publish.loading || getOne.loading} onClick={() => publish.fetch({ itemId: props.data.id })} sx={{ height: "100%" }}>Publish</LoadingButton>
+          : <Button variant="outlined" sx={{ height: "100%" }} disabled>{props.data.status == ItemStatus.ONGOING ? "Published" : "Finished"}</Button>}
       </Stack>
     </Stack>
     <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)} anchorOrigin={{ vertical: "top", horizontal: "center" }}>

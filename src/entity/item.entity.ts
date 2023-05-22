@@ -21,13 +21,15 @@ export class ItemEntity {
   timeWindow: number = 0;
 
   @Expose()
+  @Type(() => Date)
   startedAt: Date = new Date(0);
 
   @Expose()
   status: ItemStatus = ItemStatus.DRAFT;
 
   @Expose()
-  createdBy: number = 0;
+  @Type(() => ItemCreator)
+  creator: ItemCreator = new ItemCreator()
 
   @Expose()
   bidCount: number = 0;
@@ -44,6 +46,14 @@ export enum ItemStatus {
   DRAFT = "draft",
   ONGOING = "ongoing",
   FINISHED = "finished"
+}
+
+export class ItemCreator {
+  @Expose()
+  id: number = 0;
+
+  @Expose()
+  username: string = "";
 }
 
 export class BidWinner {
