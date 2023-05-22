@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { HOST, logger } from "../config"
 import { AppError } from "../pkg/apperror/apperror.pkg"
 import { safeCatchPromise } from "../pkg/safecatch/safecatch.pkg"
@@ -31,6 +31,12 @@ export const useFetch = <T>(method: HTTPMethod, endpoint: string, cls: ClassCons
   const [loading, setLoading] = useState(false)
   const { auth } = useContext(Context)
 
+  const abortController = new AbortController()
+
+  useEffect(() => {
+    return () => abortController.abort()
+  }, [])
+
   const _fetchData = async (req: Nullable<Object>) => {
     let reqBody: Nullable<string> = null
     if (req != null) {
@@ -46,7 +52,7 @@ export const useFetch = <T>(method: HTTPMethod, endpoint: string, cls: ClassCons
       headers["token"] = auth.data?.token
     }
 
-    const res = await safeCatchPromise(() => fetch(HOST + endpoint, { method, body: reqBody, headers }))
+    const res = await safeCatchPromise(() => fetch(HOST + endpoint, { method, body: reqBody, headers, signal: abortController.signal }))
     if (res instanceof AppError) {
       return new UnexpectedError(`failed to fetch ${endpoint}`, res)
     }

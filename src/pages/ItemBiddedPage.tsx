@@ -165,10 +165,7 @@ function AppPagination<T>(props: AppPaginationProps<T>) {
 
 function BidRow() {
   return (
-    <TableRow
-      key=""
-      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-    >
+    <TableRow>
       <TableCell>Lorem ipsum dolor sit amet</TableCell>
       <TableCell align="right">2023-02-02 08:00:00</TableCell>
       <TableCell align="right">2321</TableCell>
