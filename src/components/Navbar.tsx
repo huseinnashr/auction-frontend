@@ -34,9 +34,9 @@ function Navbar() {
         </Box>
         <Box flexGrow={0} mx={2}>
           <Tooltip title="Open settings">
-            <Button color="inherit" endIcon={<Avatar sx={{ width: 32, height: 32 }} alt="T" src="/static/images/avatar/2.jpg" />}
+            <Button color="inherit" endIcon={<Avatar sx={{ width: 32, height: 32 }} />}
               sx={{ textTransform: "lowercase" }} onClick={(e) => setAnchorElUser(e.currentTarget)}>
-              test.test@gmail.com
+              {auth.data?.user.username}
             </Button>
           </Tooltip>
           <Menu anchorEl={anchorElUser} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} keepMounted

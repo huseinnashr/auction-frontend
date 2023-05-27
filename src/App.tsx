@@ -2,7 +2,6 @@ import React, { useContext, useEffect } from 'react';
 import NotFoundPage from './pages/NotFoundPage';
 import LoginPage from './pages/LoginPage';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import HomePage from './pages/HomePage';
 import RegisterPage from './pages/RegisterPage';
 import ItemBiddedPage from './pages/ItemBiddedPage';
 import DepositPage from './pages/DepositPage';
@@ -13,6 +12,7 @@ import { NavbarView } from './components/NavbarView';
 import { supressMasonryErr } from './hooks/tempfix.hooks';
 import ItemCreatePage from './pages/ItemCreatePage';
 import { ItemCreatedPage } from './pages/ItemCreatedPage';
+import { HomePage } from './pages/HomePage';
 
 export const App = () => {
   const { auth } = useContext(Context)

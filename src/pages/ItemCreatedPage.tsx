@@ -65,6 +65,11 @@ export const Item = (props: ItemProps) => {
   const publish = useFetch("POST", "/item/publish", PublishItemResponse, { useAuth: true, noUserField: true })
   const getOne = useFetch("POST", "/user/item/one", GetItemResponse, { useAuth: true, noUserField: true })
 
+  const [error, setError] = useState<Nullable<ViewMessageError>>(null)
+
+  const [errSBOpen, setErrSBOpen] = useState(false)
+  const [successSBOpen, setSuccessSBOpen] = useState(false)
+
   const expiryTimer = useTimer({
     onExpire: () => { getOne.fetch({ itemId: props.data.id }) },
     delay: APIFetchTimerDelay
@@ -80,12 +85,11 @@ export const Item = (props: ItemProps) => {
   useEffect(() => { if (publish.data) getOne.fetch({ itemId: props.data.id }) }, [publish.data])
   useEffect(() => { if (getOne.data) props.setData(getOne.data.item) }, [getOne.data])
 
-  const [error, setError] = useState<Nullable<ViewMessageError>>(null)
   useEffect(() => { if (publish.error) setError(publish.error) }, [publish.error])
   useEffect(() => { if (getOne.error) setError(getOne.error) }, [getOne.error])
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
-  useEffect(() => { if (error) setSnackbarOpen(true) }, [error])
+  useEffect(() => { if (error) setErrSBOpen(true) }, [error])
+  useEffect(() => { if (publish.data) setSuccessSBOpen(true) }, [publish.data])
 
   return <Paper elevation={2} >
     <Stack direction="row">
@@ -110,8 +114,13 @@ export const Item = (props: ItemProps) => {
           : <Button variant="outlined" sx={{ height: "100%" }} disabled>{props.data.status == ItemStatus.ONGOING ? "Published" : "Finished"}</Button>}
       </Stack>
     </Stack>
-    <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
-      <Alert onClose={() => setSnackbarOpen(false)} severity="error" sx={{ width: '100%' }}>
+    <Snackbar open={successSBOpen} autoHideDuration={6000} onClose={() => setSuccessSBOpen(false)} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+      <Alert onClose={() => setSuccessSBOpen(false)} severity="success" sx={{ width: '100%' }}>
+        Success publishing {props.data.name}
+      </Alert>
+    </Snackbar>
+    <Snackbar open={errSBOpen} autoHideDuration={6000} onClose={() => setErrSBOpen(false)} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+      <Alert onClose={() => setErrSBOpen(false)} severity="error" sx={{ width: '100%' }}>
         Failed to publish item. {error?.message}
       </Alert>
     </Snackbar>

@@ -25,5 +25,8 @@ export class LoginResponse {
 
 class LoginUser {
   @Expose()
+  id: number = 0
+
+  @Expose()
   username: string = ""
 }

@@ -15,8 +15,10 @@ export const useTimer = (props: UseTimerProps) => {
   const start = (ends: Date) => {
     deleteActiveInterval()
 
+    const getSecondsLeft = () => ends.getTime() - Date.now()
+    setSeconds(getSecondsLeft())
     activeInterval.current = setInterval(() => {
-      const secondsLeft = ends.getTime() - Date.now()
+      const secondsLeft = getSecondsLeft()
       if (secondsLeft < 0) {
         deleteActiveInterval()
         setTimeout(() => props.onExpire(), props.delay)
