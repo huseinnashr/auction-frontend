@@ -11,6 +11,7 @@ import { Nullable } from '../pkg/safecatch/safecatch.type';
 import { ConvertSecondsLeftToString, useTimer } from '../hooks/usetimer.hooks';
 import { BidResponse } from '../entity/bid.entity';
 import { Context } from '../context/index.context';
+import { EmojiEvents } from '@mui/icons-material';
 
 export const HomePage = () => {
   const getAll = useFetch("POST", "/item/all", GetAllItemResponse, { noUserField: true })
@@ -123,6 +124,11 @@ export const Item = (props: ItemProps) => {
           <Button variant="outlined" sx={{ height: "100%" }} disabled>Finished</Button>}
       </Stack>
     </Stack>
+    {props.data.winner != null ?
+      <Alert severity='warning' icon={<EmojiEvents />}>
+        {props.data.winner.username} at ${props.data.winner.amount}
+      </Alert> : null
+    }
     <Snackbar open={successSBOpen} autoHideDuration={6000} onClose={() => setSuccessSBOpen(false)} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
       <Alert onClose={() => setSuccessSBOpen(false)} severity="success" sx={{ width: '100%' }}>
         Success bidding {props.data.name} at ${amount}

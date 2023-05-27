@@ -9,6 +9,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import { ViewMessageError } from '../entity/errors.entity';
 import { Nullable } from '../pkg/safecatch/safecatch.type';
 import { ConvertSecondsLeftToString, useTimer } from '../hooks/usetimer.hooks';
+import { EmojiEvents } from '@mui/icons-material';
 
 export const ItemCreatedPage = () => {
   const getAll = useFetch("POST", "/user/item/all", GetAllItemResponse, { useAuth: true, noUserField: true })
@@ -114,6 +115,11 @@ export const Item = (props: ItemProps) => {
           : <Button variant="outlined" sx={{ height: "100%" }} disabled>{props.data.status == ItemStatus.ONGOING ? "Published" : "Finished"}</Button>}
       </Stack>
     </Stack>
+    {props.data.winner != null ?
+      <Alert severity='warning' icon={<EmojiEvents />}>
+        {props.data.winner.username} at ${props.data.winner.amount}
+      </Alert> : null
+    }
     <Snackbar open={successSBOpen} autoHideDuration={6000} onClose={() => setSuccessSBOpen(false)} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
       <Alert onClose={() => setSuccessSBOpen(false)} severity="success" sx={{ width: '100%' }}>
         Success publishing {props.data.name}

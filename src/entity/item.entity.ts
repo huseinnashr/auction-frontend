@@ -58,7 +58,7 @@ export class ItemCreator {
 
 export class BidWinner {
   @Expose()
-  name: string = "";
+  username: string = "";
 
   @Expose()
   amount: number = 0;
