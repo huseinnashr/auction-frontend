@@ -30,3 +30,13 @@ class LoginUser {
   @Expose()
   username: string = ""
 }
+
+export class RegisterResponse {
+  @Expose()
+  message: string = ""
+}
+
+export class ResendResponse {
+  @Expose()
+  message: string = ""
+}

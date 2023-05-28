@@ -2,9 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import NotFoundPage from './pages/NotFoundPage';
 import LoginPage from './pages/LoginPage';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import RegisterPage from './pages/RegisterPage';
 import DepositPage from './pages/DepositPage';
-import ResendPage from './pages/ResendPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Context } from './context/index.context';
 import { NavbarView } from './components/NavbarView';
@@ -13,6 +11,8 @@ import ItemCreatePage from './pages/ItemCreatePage';
 import { ItemCreatedPage } from './pages/ItemCreatedPage';
 import { HomePage } from './pages/HomePage';
 import { UserBidPage } from './pages/UserBid';
+import { RegisterPage } from './pages/RegisterPage';
+import { ResendPage } from './pages/ResendPage';
 
 export const App = () => {
   const { auth } = useContext(Context)
