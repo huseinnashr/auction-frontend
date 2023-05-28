@@ -34,6 +34,10 @@ export class BidEntity {
   @Expose()
   @Type(() => BidItem)
   item: BidItem = new BidItem()
+
+  @Expose()
+  @Type(() => Bidder)
+  bidder: Bidder = new Bidder()
 }
 
 class BidItem {
@@ -44,12 +48,17 @@ class BidItem {
   status: ItemStatus = ItemStatus.DRAFT;
 }
 
+class Bidder {
+  @Expose()
+  username: string = ""
+}
+
 export class BidResponse {
   @Expose()
   message: string = ""
 }
 
-export class GetAllBidByUserResponse {
+export class GetAllBidResponse {
   @Expose()
   @Type(() => BidEntity)
   bids: BidEntity[] = []

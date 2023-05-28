@@ -13,10 +13,10 @@ import { HomePage } from './pages/HomePage';
 import { UserBidPage } from './pages/UserBid';
 import { RegisterPage } from './pages/RegisterPage';
 import { ResendPage } from './pages/ResendPage';
+import { ItemDetailPage } from './pages/ItemDetailPage';
 
-export const App = () => {
+export const AppRoute = () => {
   const { auth } = useContext(Context)
-  useEffect(() => supressMasonryErr(), [])
 
   return (
     <BrowserRouter>
@@ -30,6 +30,7 @@ export const App = () => {
           <Route Component={NavbarView}>
             <Route path="/" Component={HomePage} />
             <Route path="/item/created" Component={ItemCreatedPage} />
+            <Route path="/item/detail/:itemId" Component={ItemDetailPage} />
             <Route path="/user/bid/all" Component={UserBidPage} />
             <Route path="/item/create" Component={ItemCreatePage} />
             <Route path="/deposit" Component={DepositPage} />
@@ -38,5 +39,11 @@ export const App = () => {
         <Route path="*" Component={NotFoundPage} />
       </Routes>
     </BrowserRouter>
+  )
+}
+
+export const App = () => {
+  return (
+    <AppRoute />
   )
 }

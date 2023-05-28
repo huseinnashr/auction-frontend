@@ -6,7 +6,6 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { Nullable } from '../pkg/safecatch/safecatch.type';
 import { ViewMessageError } from '../entity/errors.entity';
 import { Map } from 'immutable';
-import { Context } from '../context/index.context';
 import { Link } from 'react-router-dom';
 
 export function RegisterPage() {

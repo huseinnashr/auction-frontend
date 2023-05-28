@@ -1,4 +1,4 @@
-import { Alert, Button, Paper, Snackbar, Stack, Typography } from '@mui/material';
+import { Alert, Button, Card, Snackbar, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { GetAllItemResponse, GetItemResponse, ItemEntity, ItemStatus, PublishItemResponse } from '../entity/item.entity';
 import { useFetch } from '../hooks/usefetch.hooks';
@@ -10,6 +10,7 @@ import { ViewMessageError } from '../entity/errors.entity';
 import { Nullable } from '../pkg/safecatch/safecatch.type';
 import { ConvertSecondsLeftToString, useTimer } from '../hooks/usetimer.hooks';
 import { EmojiEvents } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 export const ItemCreatedPage = () => {
   const getAll = useFetch("POST", "/user/item/all", GetAllItemResponse, { useAuth: true, noUserField: true })
@@ -92,10 +93,10 @@ export const Item = (props: ItemProps) => {
   useEffect(() => { if (error) setErrSBOpen(true) }, [error])
   useEffect(() => { if (publish.data) setSuccessSBOpen(true) }, [publish.data])
 
-  return <Paper elevation={2} >
+  return <Card>
     <Stack direction="row">
       <Stack direction="column" flexGrow={1} sx={{ padding: "8px" }}>
-        <Typography>{props.data.name}</Typography>
+        <Link to={"/item/detail/" + props.data.id}>{props.data.name}</Link>
         <Stack direction="row" >
           <Stack direction="row" flexGrow={1} spacing={1}>
             <Typography variant='caption'>By: {props.data.creator.username}</Typography>
@@ -130,5 +131,5 @@ export const Item = (props: ItemProps) => {
         Failed to publish item. {error?.message}
       </Alert>
     </Snackbar>
-  </Paper>
+  </Card>
 }

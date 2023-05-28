@@ -1,9 +1,9 @@
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Paper, Snackbar, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Button, Card, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Snackbar, Stack, TextField, Typography } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
-import { GetAllItemResponse, GetItemResponse, ItemEntity, ItemStatus, PublishItemResponse } from '../entity/item.entity';
+import { GetAllItemResponse, GetItemResponse, ItemEntity, ItemStatus } from '../entity/item.entity';
 import { useFetch } from '../hooks/usefetch.hooks';
 import { LoadingButton } from '@mui/lab';
-import { PaginationLimit, TimerHTTPDelay as APIFetchTimerDelay } from '../config';
+import { PaginationLimit, TimerHTTPDelay } from '../config';
 import { ItemSkeleton } from '../components/ItemSkeleton';
 import PeopleIcon from '@mui/icons-material/People';
 import { ViewMessageError } from '../entity/errors.entity';
@@ -12,6 +12,7 @@ import { ConvertSecondsLeftToString, useTimer } from '../hooks/usetimer.hooks';
 import { BidResponse } from '../entity/bid.entity';
 import { Context } from '../context/index.context';
 import { EmojiEvents } from '@mui/icons-material';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const HomePage = () => {
   const getAll = useFetch("POST", "/item/all", GetAllItemResponse, { noUserField: true })
@@ -65,6 +66,7 @@ interface ItemProps {
 }
 
 export const Item = (props: ItemProps) => {
+  const navigate = useNavigate()
   const { auth } = useContext(Context)
 
   const bid = useFetch("POST", "/item/bid", BidResponse, { useAuth: true, noUserField: true })
@@ -80,7 +82,7 @@ export const Item = (props: ItemProps) => {
 
   const expiryTimer = useTimer({
     onExpire: () => { getOne.fetch({ itemId: props.data.id }) },
-    delay: APIFetchTimerDelay
+    delay: TimerHTTPDelay
   })
 
   useEffect(() => {
@@ -99,10 +101,10 @@ export const Item = (props: ItemProps) => {
   useEffect(() => { if (error) setErrSBOpen(true) }, [error])
   useEffect(() => { if (bid.data) setSuccessSBOpen(true) }, [bid.data])
 
-  return <Paper elevation={2} >
+  return <Card >
     <Stack direction="row">
       <Stack direction="column" flexGrow={1} sx={{ padding: "8px" }}>
-        <Typography>{props.data.name}</Typography>
+        <Link to={"/item/detail/" + props.data.id}>{props.data.name}</Link>
         <Stack direction="row" >
           <Stack direction="row" flexGrow={1} spacing={1}>
             <Typography variant='caption'>By: {props.data.creator.username}</Typography>
@@ -155,5 +157,5 @@ export const Item = (props: ItemProps) => {
         }}>Bid</Button>
       </DialogActions>
     </Dialog>
-  </Paper>
+  </Card>
 }

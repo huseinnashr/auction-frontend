@@ -1,15 +1,16 @@
 import { Chip, Paper, Skeleton, Stack, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { GetAllBidByUserResponse } from '../entity/bid.entity';
+import { GetAllBidResponse } from '../entity/bid.entity';
 import EmojiEvents from '@mui/icons-material/EmojiEvents';
 import { TablePagination } from '../components/TablePagination';
 import { useFetch } from '../hooks/usefetch.hooks';
 import { AccessTime, Cancel, CurrencyExchange, PriceCheck, TrendingDown } from '@mui/icons-material';
 import { ItemStatus } from '../entity/item.entity';
 import { PaginationLimit } from '../config';
+import { Link } from 'react-router-dom';
 
 export function UserBidPage() {
-  const getBids = useFetch("POST", "/user/bid/all", GetAllBidByUserResponse, { noUserField: true, useAuth: true })
+  const getBids = useFetch("POST", "/user/bid/all", GetAllBidResponse, { noUserField: true, useAuth: true })
 
   const [page, setPage] = useState(1)
   const [cursors, setCursors] = useState<number[]>([])
@@ -50,18 +51,18 @@ export function UserBidPage() {
           <TableBody>
             {getBids.data?.bids.map((bid, i) => (
               <TableRow key={i}>
-                <TableCell width="35%">{bid.item.name}</TableCell>
+                <TableCell width="35%"><Link to={"/item/detail/" + bid.itemId}>{bid.item.name}</Link></TableCell>
                 <TableCell align="right">{bid.createdAt.toISOString()}</TableCell>
                 <TableCell align="right">${bid.amount}</TableCell>
                 <TableCell align="right">
                   <Stack direction="row" spacing={1} justifyContent="end">
-                    {!bid.isActive ? <Chip variant="outlined" color="default" label="Cancelled" icon={<Cancel />} /> : null}
-                    {bid.isActive && bid.item.status == ItemStatus.ONGOING ? <Chip variant="outlined" color="primary" label="Ongoing" icon={<AccessTime />} /> : null}
-                    {bid.isActive && bid.item.status == ItemStatus.FINISHED && !bid.isWinner ? <Chip variant="outlined" color="error" label="Lose" icon={<TrendingDown />} /> : null}
-                    {bid.isWinner ? <Chip variant="outlined" color="warning" label="Won" icon={<EmojiEvents />} /> : null}
+                    {!bid.isActive ? <Chip variant="outlined" size='small' color="default" label="Cancelled" icon={<Cancel />} /> : null}
+                    {bid.isActive && bid.item.status == ItemStatus.ONGOING ? <Chip variant="outlined" size='small' color="primary" label="Ongoing" icon={<AccessTime />} /> : null}
+                    {bid.isActive && bid.item.status == ItemStatus.FINISHED && !bid.isWinner ? <Chip variant="outlined" size='small' color="error" label="Lose" icon={<TrendingDown />} /> : null}
+                    {bid.isWinner ? <Chip variant="outlined" size='small' color="warning" label="Won" icon={<EmojiEvents />} /> : null}
 
-                    {bid.isReturned ? <Chip variant="outlined" color="info" label="Returned" icon={<CurrencyExchange />} /> : null}
-                    {bid.isPaid ? <Chip variant="outlined" color="success" label="Paid" icon={<PriceCheck />} /> : null}
+                    {bid.isReturned ? <Chip variant="outlined" size='small' color="info" label="Returned" icon={<CurrencyExchange />} /> : null}
+                    {bid.isPaid ? <Chip variant="outlined" size='small' color="success" label="Paid" icon={<PriceCheck />} /> : null}
                   </Stack>
                 </TableCell>
               </TableRow>
@@ -70,9 +71,9 @@ export function UserBidPage() {
               new Array(PaginationLimit).fill(0).map((_, i) => (
                 <TableRow key={i}>
                   <TableCell width="35%"><Skeleton /></TableCell>
+                  <TableCell width="20%" align='right'><Skeleton /></TableCell>
                   <TableCell width="15%" align='right'><Skeleton /></TableCell>
-                  <TableCell width="15%" align='right'><Skeleton /></TableCell>
-                  <TableCell width="25%" align='right'><Skeleton /></TableCell>
+                  <TableCell width="20%" align='right'><Skeleton /></TableCell>
                 </TableRow>
               )) : null}
           </TableBody>
