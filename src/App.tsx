@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import NotFoundPage from './pages/NotFoundPage';
 import LoginPage from './pages/LoginPage';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -6,7 +6,6 @@ import DepositPage from './pages/DepositPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Context } from './context/index.context';
 import { NavbarView } from './components/NavbarView';
-import { supressMasonryErr } from './hooks/tempfix.hooks';
 import ItemCreatePage from './pages/ItemCreatePage';
 import { ItemCreatedPage } from './pages/ItemCreatedPage';
 import { HomePage } from './pages/HomePage';
