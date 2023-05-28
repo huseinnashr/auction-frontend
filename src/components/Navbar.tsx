@@ -30,7 +30,7 @@ function Navbar() {
 
         <Box sx={{ flexGrow: 1, display: 'flex' }}>
           <Button key="created" color="inherit" onClick={() => navigate('/item/created')}>Created</Button>
-          <Button key="bidded" color="inherit" onClick={() => navigate('/item/bidded')}>Bidded</Button>
+          <Button key="bidded" color="inherit" onClick={() => navigate('/user/bid/all')}>Bidded</Button>
         </Box>
         <Box flexGrow={0} mx={2}>
           <Tooltip title="Open settings">

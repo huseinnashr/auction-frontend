@@ -3,7 +3,6 @@ import NotFoundPage from './pages/NotFoundPage';
 import LoginPage from './pages/LoginPage';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import RegisterPage from './pages/RegisterPage';
-import ItemBiddedPage from './pages/ItemBiddedPage';
 import DepositPage from './pages/DepositPage';
 import ResendPage from './pages/ResendPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -13,6 +12,7 @@ import { supressMasonryErr } from './hooks/tempfix.hooks';
 import ItemCreatePage from './pages/ItemCreatePage';
 import { ItemCreatedPage } from './pages/ItemCreatedPage';
 import { HomePage } from './pages/HomePage';
+import { UserBidPage } from './pages/UserBid';
 
 export const App = () => {
   const { auth } = useContext(Context)
@@ -30,7 +30,7 @@ export const App = () => {
           <Route Component={NavbarView}>
             <Route path="/" Component={HomePage} />
             <Route path="/item/created" Component={ItemCreatedPage} />
-            <Route path="/item/bidded" Component={ItemBiddedPage} />
+            <Route path="/user/bid/all" Component={UserBidPage} />
             <Route path="/item/create" Component={ItemCreatePage} />
             <Route path="/deposit" Component={DepositPage} />
           </Route>
