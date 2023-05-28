@@ -1,25 +1,38 @@
-import { Chip, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Typography } from '@mui/material';
+import { Chip, Paper, Skeleton, Stack, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { BidEntity, GetAllBidByUserResponse } from '../entity/bid.entity';
+import { GetAllBidByUserResponse } from '../entity/bid.entity';
 import EmojiEvents from '@mui/icons-material/EmojiEvents';
 import { TablePagination } from '../components/TablePagination';
 import { useFetch } from '../hooks/usefetch.hooks';
-import { PaginationLimit } from '../config';
-import { AccessTime, Cancel, CurrencyExchange, Leaderboard, PriceCheck, TrendingDown } from '@mui/icons-material';
+import { AccessTime, Cancel, CurrencyExchange, PriceCheck, TrendingDown } from '@mui/icons-material';
 import { ItemStatus } from '../entity/item.entity';
+import { PaginationLimit } from '../config';
 
 export function UserBidPage() {
   const getBids = useFetch("POST", "/user/bid/all", GetAllBidByUserResponse, { noUserField: true, useAuth: true })
 
   const [page, setPage] = useState(1)
-  const [bids, setBids] = useState<BidEntity[]>([])
-  const [cursor, setCursor] = useState<number[]>([])
-
-  const [loading, setLoading] = useState(false)
+  const [cursors, setCursors] = useState<number[]>([])
 
   useEffect(() => {
     getBids.fetch({ onlyActive: false, pagination: { nextId: 0, limit: PaginationLimit } })
   }, [])
+
+
+  useEffect(() => {
+    if (cursors[page] == null) return
+    getBids.fetch({ onlyActive: false, pagination: { nextId: cursors[page], limit: PaginationLimit } })
+  }, [page])
+
+  useEffect(() => {
+    if (getBids.data) {
+      const newCursors = [...cursors]
+      newCursors[page] = getBids.data.pagination.currId
+      newCursors[page + 1] = getBids.data.pagination.nextId
+
+      return setCursors(newCursors)
+    }
+  }, [getBids.data])
 
   return (
     <Stack padding={8}>
@@ -35,10 +48,10 @@ export function UserBidPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {getBids.data?.bids.map((bid) => (
-              <TableRow>
-                <TableCell>{bid.item.name}</TableCell>
-                <TableCell align="right">{bid.createdAt.toString()}</TableCell>
+            {getBids.data?.bids.map((bid, i) => (
+              <TableRow key={i}>
+                <TableCell width="35%">{bid.item.name}</TableCell>
+                <TableCell align="right">{bid.createdAt.toISOString()}</TableCell>
                 <TableCell align="right">${bid.amount}</TableCell>
                 <TableCell align="right">
                   <Stack direction="row" spacing={1} justifyContent="end">
@@ -53,12 +66,20 @@ export function UserBidPage() {
                 </TableCell>
               </TableRow>
             ))}
-
+            {getBids.loading ?
+              new Array(PaginationLimit).fill(0).map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell width="35%"><Skeleton /></TableCell>
+                  <TableCell width="15%" align='right'><Skeleton /></TableCell>
+                  <TableCell width="15%" align='right'><Skeleton /></TableCell>
+                  <TableCell width="25%" align='right'><Skeleton /></TableCell>
+                </TableRow>
+              )) : null}
           </TableBody>
           <TableFooter>
             <TableRow >
               <TableCell colSpan={4} padding="none" align='right'>
-                <TablePagination page={page} lastPage={cursor[page + 1] == null} onPageChange={(page) => setPage(page)} loading={loading} />
+                <TablePagination page={page} lastPage={cursors[page + 1] == 0} onPageChange={(page) => setPage(page)} loading={getBids.loading} />
               </TableCell>
             </TableRow>
           </TableFooter>
