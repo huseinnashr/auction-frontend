@@ -19,3 +19,5 @@
 - Some usecase need to transform or merge result from several API call. Need to wrap those inside `repositories` so we can reause it across many react component
 - We can use https://mqtt.org/ to send realtime bid data. Need to revamp the UI also such as placing bid flow inside item detail
 - Integration with `logging` service
+- Implement unit test
+- Setup deployment pipeline
