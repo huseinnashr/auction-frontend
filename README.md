@@ -1,4 +1,4 @@
-# Jitera Frontend
+# Auction Frontend
 
 ## How to run
 ### Prerequisites

@@ -24,7 +24,7 @@ function Navbar() {
           <Typography variant="h6" noWrap component="a" mx={2} display='block' sx={{
             fontFamily: 'monospace', fontWeight: 700,
             letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none',
-          }}> JITERA
+          }}> AUCTION
           </Typography>
         </Button>
 
